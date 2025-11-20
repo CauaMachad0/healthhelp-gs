@@ -1,7 +1,10 @@
 package br.com.global.healthhelp.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "REGISTRO_DIARIO", schema = "RM558024")
@@ -12,18 +15,22 @@ public class RegistroDiario {
     @Column(name = "REGISTRO_ID")
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "USUARIO_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USUARIO_ID", referencedColumnName = "USUARIO_ID", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "DATA_REF", nullable = false)
+    @Column(name = "DATA_REF")
     private LocalDate dataRegistro;
 
     @Column(name = "PONTUACAO_EQUILIBRIO")
-    private Integer pontuacaoEquilibrio;
+    private Double pontuacaoEquilibrio;
 
-    @Column(name = "OBSERVACOES", length = 500)
+    @Column(name = "OBSERVACOES", length = 1000)
     private String observacoes;
+
+    @OneToMany(mappedBy = "registroDiario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Atividade> atividades = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -33,20 +40,12 @@ public class RegistroDiario {
         this.id = id;
     }
 
-    public String getObservacoes() {
-        return observacoes;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setObservacoes(String observacoes) {
-        this.observacoes = observacoes;
-    }
-
-    public Integer getPontuacaoEquilibrio() {
-        return pontuacaoEquilibrio;
-    }
-
-    public void setPontuacaoEquilibrio(Integer pontuacaoEquilibrio) {
-        this.pontuacaoEquilibrio = pontuacaoEquilibrio;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDate getDataRegistro() {
@@ -57,11 +56,27 @@ public class RegistroDiario {
         this.dataRegistro = dataRegistro;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Double getPontuacaoEquilibrio() {
+        return pontuacaoEquilibrio;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setPontuacaoEquilibrio(Double pontuacaoEquilibrio) {
+        this.pontuacaoEquilibrio = pontuacaoEquilibrio;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
+    public List<Atividade> getAtividades() {
+        return atividades;
+    }
+
+    public void setAtividades(List<Atividade> atividades) {
+        this.atividades = atividades;
     }
 }

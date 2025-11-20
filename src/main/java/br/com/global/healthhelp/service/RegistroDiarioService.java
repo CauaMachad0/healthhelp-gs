@@ -8,10 +8,10 @@ import br.com.global.healthhelp.model.Usuario;
 import br.com.global.healthhelp.repository.AtividadeRepository;
 import br.com.global.healthhelp.repository.CategoriaAtividadeRepository;
 import br.com.global.healthhelp.repository.RegistroDiarioRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegistroDiarioService {
@@ -38,18 +38,20 @@ public class RegistroDiarioService {
 
         registro = registroRepo.save(registro);
 
-        for (AtividadeDTO a : dto.atividades()) {
-            var cat = categoriaRepo.findById(a.idCategoria())
-                    .orElseThrow(() -> new IllegalArgumentException("Categoria inválida"));
+        if (dto.atividades() != null) {
+            for (AtividadeDTO a : dto.atividades()) {
+                var cat = categoriaRepo.findById(a.idCategoria())
+                        .orElseThrow(() -> new IllegalArgumentException("Categoria inválida: " + a.idCategoria()));
 
-            var atividade = new Atividade();
-            atividade.setRegistroDiario(registro);
-            atividade.setCategoria(cat);
-            atividade.setInicio(a.inicio());
-            atividade.setFim(a.fim());
-            atividade.setDescricao(a.descricao());
+                var atividade = new Atividade();
+                atividade.setRegistroDiario(registro);
+                atividade.setCategoria(cat);
+                atividade.setInicio(a.inicio());
+                atividade.setFim(a.fim());
+                atividade.setDescricao(a.descricao());
 
-            atividadeRepo.save(atividade);
+                atividadeRepo.save(atividade);
+            }
         }
 
         return registro;

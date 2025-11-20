@@ -1,18 +1,14 @@
 package br.com.global.healthhelp.controller;
 
-import br.com.global.healthhelp.dto.RecomendacaoDTO;
 import br.com.global.healthhelp.dto.RegistroDiarioDTO;
 import br.com.global.healthhelp.model.Usuario;
-import br.com.global.healthhelp.service.RecomendacaoService;
 import br.com.global.healthhelp.service.RegistroDiarioService;
-import jakarta.validation.Valid;
+import br.com.global.healthhelp.service.RecomendacaoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/registros")
@@ -34,7 +30,7 @@ public class RegistroDiarioController {
     }
 
     @PostMapping
-    public ResponseEntity<RegistroDiarioDTO> criar(@RequestBody @Valid RegistroDiarioDTO dto) {
+    public ResponseEntity<RegistroDiarioDTO> criar(@RequestBody RegistroDiarioDTO dto) {
         var usuario = getUsuarioFake();
         var registro = registroService.salvarRegistro(usuario, dto);
 
@@ -52,20 +48,14 @@ public class RegistroDiarioController {
     @GetMapping
     public Page<RegistroDiarioDTO> listar(Pageable pageable) {
         var usuario = getUsuarioFake();
-        return registroService.listarPorUsuario(usuario, pageable)
-                .map(r -> new RegistroDiarioDTO(
-                        r.getId(),
-                        r.getDataRegistro(),
-                        r.getPontuacaoEquilibrio(),
-                        r.getObservacoes(),
-                        List.of()
-                ));
-    }
+        var pagina = registroService.listarPorUsuario(usuario, pageable);
 
-    @PostMapping("/recomendacoes")
-    public ResponseEntity<RecomendacaoDTO> gerarRecomendacao() {
-        var usuario = getUsuarioFake();
-        var dto = recomendacaoService.gerarRecomendacao(usuario);
-        return ResponseEntity.ok(dto);
+        return pagina.map(registro -> new RegistroDiarioDTO(
+                registro.getId(),
+                registro.getDataRegistro(),
+                registro.getPontuacaoEquilibrio(),
+                registro.getObservacoes(),
+                null // não estamos carregando atividades na listagem resumida
+        ));
     }
 }

@@ -5,11 +5,14 @@ import br.com.global.healthhelp.dto.RegistroDiarioDTO;
 import br.com.global.healthhelp.model.Usuario;
 import br.com.global.healthhelp.repository.CategoriaAtividadeRepository;
 import br.com.global.healthhelp.service.RegistroDiarioService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,22 +37,32 @@ public class RegistroDiarioWebController {
         return u;
     }
 
-    @GetMapping("/web/registros")
-    public String listarRegistros(Model model) {
+    @GetMapping
+    public String listarRegistros(
+            @PageableDefault(size = 5, sort = "dataRegistro", direction = Sort.Direction.DESC)
+            Pageable pageable,
+            Model model
+    ) {
+        Usuario usuario = getUsuarioFake();
+        Page<?> pagina = registroService.listarPorUsuario(usuario, pageable);
+
+        model.addAttribute("pagina", pagina);
         model.addAttribute("activePage", "registros");
-        return "registros-diarios/lista";
+
+        return "registros/lista";
     }
 
     @GetMapping("/novo")
     public String novo(Model model) {
         model.addAttribute("dataHoje", LocalDate.now());
         model.addAttribute("categorias", categoriaRepo.findAll());
+        model.addAttribute("activePage", "registros");
         return "registros/form";
     }
 
     @PostMapping
-    public String salvar(@RequestParam("dataRef") LocalDate dataRef,
-                         @RequestParam(value = "pontuacaoEquilibrio", required = false) Integer pontuacaoEquilibrio,
+    public String salvar(@RequestParam("dataRegistro") LocalDate dataRegistro,
+                         @RequestParam(value = "pontuacaoEquilibrio", required = false) Double pontuacaoEquilibrio,
                          @RequestParam(value = "observacoes", required = false) String observacoes,
                          @RequestParam("idCategoria") Long idCategoria,
                          @RequestParam("inicio") String inicio,
@@ -69,7 +82,7 @@ public class RegistroDiarioWebController {
 
         RegistroDiarioDTO dto = new RegistroDiarioDTO(
                 null,
-                dataRef,
+                dataRegistro,
                 pontuacaoEquilibrio,
                 observacoes,
                 List.of(atividade)

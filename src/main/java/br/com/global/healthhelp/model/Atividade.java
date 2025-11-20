@@ -4,29 +4,35 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ATIVIDADE")
+@Table(name = "ATIVIDADE", schema = "RM558024")
+@SequenceGenerator(
+        name = "seq_atividade",
+        sequenceName = "ATIVIDADE_ID_SEQ",
+        allocationSize = 1,
+        schema = "RM558024"
+)
 public class Atividade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_ATIVIDADE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_atividade")
+    @Column(name = "ATIVIDADE_ID")
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_REGISTRO")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REGISTRO_ID")
     private RegistroDiario registroDiario;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_CATEGORIA")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATEGORIA_ID")
     private CategoriaAtividade categoria;
 
-    @Column(name = "INICIO", nullable = false)
+    @Column(name = "INICIO")
     private LocalDateTime inicio;
 
-    @Column(name = "FIM", nullable = false)
+    @Column(name = "FIM")
     private LocalDateTime fim;
 
-    @Column(name = "DESCRICAO", length = 255)
+    @Column(name = "DESCRICAO")
     private String descricao;
 
     public Long getId() {
@@ -77,3 +83,4 @@ public class Atividade {
         this.registroDiario = registroDiario;
     }
 }
+
