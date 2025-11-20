@@ -1,7 +1,6 @@
 package br.com.global.healthhelp.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +15,11 @@ public class RegistroDiario {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USUARIO_ID", referencedColumnName = "USUARIO_ID", nullable = false)
+    @JoinColumn(name = "USUARIO_ID", nullable = false)
     private Usuario usuario;
 
     @Column(name = "DATA_REF")
-    private LocalDate dataRegistro;
+    private LocalDate dataRef;
 
     @Column(name = "PONTUACAO_EQUILIBRIO")
     private Double pontuacaoEquilibrio;
@@ -28,7 +27,7 @@ public class RegistroDiario {
     @Column(name = "OBSERVACOES", length = 1000)
     private String observacoes;
 
-    @OneToMany(mappedBy = "registroDiario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "registro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atividade> atividades = new ArrayList<>();
 
 
@@ -48,12 +47,12 @@ public class RegistroDiario {
         this.usuario = usuario;
     }
 
-    public LocalDate getDataRegistro() {
-        return dataRegistro;
+    public LocalDate getDataRef() {
+        return dataRef;
     }
 
-    public void setDataRegistro(LocalDate dataRegistro) {
-        this.dataRegistro = dataRegistro;
+    public void setDataRef(LocalDate dataRef) {
+        this.dataRef = dataRef;
     }
 
     public Double getPontuacaoEquilibrio() {

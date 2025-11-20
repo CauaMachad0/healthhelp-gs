@@ -8,10 +8,10 @@ import br.com.global.healthhelp.model.Usuario;
 import br.com.global.healthhelp.repository.AtividadeRepository;
 import br.com.global.healthhelp.repository.CategoriaAtividadeRepository;
 import br.com.global.healthhelp.repository.RegistroDiarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegistroDiarioService {
@@ -30,9 +30,10 @@ public class RegistroDiarioService {
 
     @Transactional
     public RegistroDiario salvarRegistro(Usuario usuario, RegistroDiarioDTO dto) {
+
         var registro = new RegistroDiario();
         registro.setUsuario(usuario);
-        registro.setDataRegistro(dto.dataRegistro());
+        registro.setDataRef(dto.dataRegistro());
         registro.setPontuacaoEquilibrio(dto.pontuacaoEquilibrio());
         registro.setObservacoes(dto.observacoes());
 
@@ -40,15 +41,19 @@ public class RegistroDiarioService {
 
         if (dto.atividades() != null) {
             for (AtividadeDTO a : dto.atividades()) {
-                var cat = categoriaRepo.findById(a.idCategoria())
-                        .orElseThrow(() -> new IllegalArgumentException("Categoria inválida: " + a.idCategoria()));
+
+                var categoria = categoriaRepo.findById(a.idCategoria())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("Categoria inválida: " + a.idCategoria()));
 
                 var atividade = new Atividade();
-                atividade.setRegistroDiario(registro);
-                atividade.setCategoria(cat);
+                atividade.setRegistro(registro);
+                atividade.setCategoria(categoria);
                 atividade.setInicio(a.inicio());
                 atividade.setFim(a.fim());
                 atividade.setDescricao(a.descricao());
+                atividade.setIntensidade1a5(a.intensidade1a5());
+                atividade.setQualidade1a5(a.qualidade1a5());
 
                 atividadeRepo.save(atividade);
             }
@@ -57,7 +62,14 @@ public class RegistroDiarioService {
         return registro;
     }
 
-    public Page<RegistroDiario> listarPorUsuario(Usuario usuario, Pageable pageable) {
-        return registroRepo.findByUsuario(usuario, pageable);
+    public Page<RegistroDiarioDTO> listarPorUsuario(Usuario usuario, Pageable pageable) {
+        return registroRepo.findByUsuario(usuario, pageable)
+                .map(registro -> new RegistroDiarioDTO(
+                        registro.getId(),
+                        registro.getDataRef(),
+                        registro.getPontuacaoEquilibrio(),
+                        registro.getObservacoes(),
+                        null
+                ));
     }
 }

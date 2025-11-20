@@ -39,12 +39,14 @@ public class RegistroDiarioWebController {
 
     @GetMapping
     public String listarRegistros(
-            @PageableDefault(size = 5, sort = "dataRegistro", direction = Sort.Direction.DESC)
+            @PageableDefault(size = 5, sort = "dataRef", direction = Sort.Direction.DESC)
             Pageable pageable,
             Model model
     ) {
         Usuario usuario = getUsuarioFake();
-        Page<?> pagina = registroService.listarPorUsuario(usuario, pageable);
+
+        Page<RegistroDiarioDTO> pagina =
+                registroService.listarPorUsuario(usuario, pageable);
 
         model.addAttribute("pagina", pagina);
         model.addAttribute("activePage", "registros");
@@ -77,6 +79,8 @@ public class RegistroDiarioWebController {
                 idCategoria,
                 inicioDt,
                 fimDt,
+                null,
+                null,
                 observacoes
         );
 

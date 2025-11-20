@@ -36,7 +36,7 @@ public class RegistroDiarioController {
 
         var resposta = new RegistroDiarioDTO(
                 registro.getId(),
-                registro.getDataRegistro(),
+                registro.getDataRef(),
                 registro.getPontuacaoEquilibrio(),
                 registro.getObservacoes(),
                 dto.atividades()
@@ -48,14 +48,6 @@ public class RegistroDiarioController {
     @GetMapping
     public Page<RegistroDiarioDTO> listar(Pageable pageable) {
         var usuario = getUsuarioFake();
-        var pagina = registroService.listarPorUsuario(usuario, pageable);
-
-        return pagina.map(registro -> new RegistroDiarioDTO(
-                registro.getId(),
-                registro.getDataRegistro(),
-                registro.getPontuacaoEquilibrio(),
-                registro.getObservacoes(),
-                null // não estamos carregando atividades na listagem resumida
-        ));
+        return registroService.listarPorUsuario(usuario, pageable);
     }
 }
