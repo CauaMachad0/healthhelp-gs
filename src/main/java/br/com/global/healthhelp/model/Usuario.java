@@ -1,6 +1,10 @@
 package br.com.global.healthhelp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -18,6 +22,15 @@ public class Usuario {
 
     @Column(name = "EMAIL", length = 200, nullable = false, unique = true)
     private String email;
+
+    @NotBlank(message = "A senha é obrigatória.")
+    @Size(min = 8, max = 60, message = "A senha deve ter entre 8 e 60 caracteres.")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&._-])[A-Za-z\\d@$!%*?&._-]{8,60}$",
+            message = "A senha deve ter letra maiúscula, minúscula, número e caractere especial."
+    )
+    @Column(name = "SENHA", length = 200, nullable = false)
+    private String senha;
 
     @Column(name = "GENERO")
     private String genero;
@@ -96,5 +109,13 @@ public class Usuario {
 
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
