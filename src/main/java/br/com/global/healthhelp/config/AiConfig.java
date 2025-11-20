@@ -1,7 +1,7 @@
 package br.com.global.healthhelp.config;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.openai.OpenAiChatClient;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class AiConfig {
 
     @Bean
-    public ChatClient chatClient(OpenAiChatClient openAiChatClient) {
-        return ChatClient.builder(openAiChatClient).build();
+    public ChatClient chatClient(OpenAiChatModel chatModel) {
+        return ChatClient.builder(chatModel).build();
     }
 }

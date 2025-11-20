@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     // Spring AI
-    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M2'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.0'
 
     // Oracle
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8:21.13.0.0'
