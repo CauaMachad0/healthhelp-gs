@@ -145,6 +145,33 @@ Envia tudo ao **Spring AI (OpenAI GPT)** e retorna:
 - Analise a rotina e gere recomendações práticas.
 - Responda em português brasileiro.
 
+---
+
+## 🔑 Configurando a API Key no IntelliJ IDEA (Variável de Ambiente)
+
+Para que o sistema gere recomendações via **Spring AI + OpenAI GPT**, é necessário configurar a variável de ambiente no IntelliJ IDEA.
+
+### 📌 Passo a passo
+
+1. Abra o **IntelliJ IDEA**  
+2. Vá em:  
+   **Run › Edit Configurations…**  
+3. Selecione a configuração **HealthHelpApplication**  
+4. Role até a seção **Environment Variables**  
+5. Clique no botão **...** (ícone de três pontos)  
+6. Adicione a variável:
+
+- SPRING_AI_OPENAI_API_KEY = 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
+
+7. Salve e execute o projeto normalmente.
+
+### ✔️ O que isso faz?
+
+O IntelliJ injeta a variável no ambiente da aplicação.  
+No seu `application.properties`, basta referenciar assim:
+
+
+Com isso, a IA estará habilitada e funcionando.
 
 ---
 
