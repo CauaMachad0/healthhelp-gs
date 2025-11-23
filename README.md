@@ -161,7 +161,7 @@ Para que o sistema gere recomendações via **Spring AI + OpenAI GPT**, é neces
 5. Clique no botão **...** (ícone de três pontos)  
 6. Adicione a variável:
 
-- SPRING_AI_OPENAI_API_KEY = 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
+- SPRING_AI_OPENAI_API_KEY = no txt enviado na entrega
 
 7. Salve e execute o projeto normalmente.
 
