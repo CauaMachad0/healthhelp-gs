@@ -10,11 +10,8 @@
 </head>
 <body style="background:#f0f2f5; color:#121310;">
 
-<!-- navbar (opcional; se quiser tirar, é só remover essa linha) -->
-<div th:replace="fragments/navbar :: navbar"></div>
-
 <section class="container d-flex align-items-center justify-content-center"
-         style="min-height: 100vh;">
+         style="min-height: 100vh; padding: 2rem 0;">
     <div class="card shadow-lg border-0 rounded-4" style="max-width: 720px; width: 100%;">
         <div class="card-body p-4 p-md-5">
             <h1 class="h3 fw-bold mb-1 text-center">Crie sua conta</h1>
@@ -22,24 +19,34 @@
                 Preencha seus dados para começar a usar o HealthHelp.
             </p>
 
-            <form th:action="@{/usuarios}" method="post" novalidate
-                  oninput="confirmaSenha.setCustomValidity(confirmaSenha.value !== senha.value ? 'As senhas não coincidem.' : '')">
+            <!-- Mensagem de erro -->
+            <div th:if="${erro}" class="alert alert-danger" role="alert">
+                <span th:text="${erro}"></span>
+            </div>
 
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <!-- Mensagem de sucesso -->
+            <div th:if="${mensagem}" class="alert alert-success" role="alert">
+                <span th:text="${mensagem}"></span>
+            </div>
+
+            <form th:action="@{/usuarios}" th:object="${usuario}" method="post"
+                  oninput="confirmaSenha.setCustomValidity(confirmaSenha.value !== senha.value ? 'As senhas não coincidem.' : '')">
 
                 <div class="row g-3">
                     <!-- Nome -->
                     <div class="col-12">
                         <label for="nome" class="form-label">Nome completo</label>
-                        <input type="text" class="form-control" id="nome" name="nome"
+                        <input type="text" class="form-control" id="nome" th:field="*{nome}"
                                placeholder="Seu nome completo" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
                     </div>
 
                     <!-- Email -->
                     <div class="col-12">
                         <label for="email" class="form-label">E-mail</label>
-                        <input type="email" class="form-control" id="email" name="email"
+                        <input type="email" class="form-control" id="email" th:field="*{email}"
                                placeholder="voce@exemplo.com" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
 
                     <!-- Senha -->
@@ -48,7 +55,7 @@
                         <input type="password"
                                class="form-control"
                                id="senha"
-                               name="senha"
+                               th:field="*{senha}"
                                required
                                minlength="8"
                                maxlength="60"
@@ -57,6 +64,7 @@
                         <div class="form-text">
                             Mínimo 8 caracteres, com letra maiúscula, minúscula, número e caractere especial.
                         </div>
+                        <div class="text-danger" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></div>
                     </div>
 
                     <!-- Confirmar senha -->
@@ -72,7 +80,7 @@
                     <!-- Gênero -->
                     <div class="col-md-4">
                         <label for="genero" class="form-label">Gênero</label>
-                        <select class="form-select" id="genero" name="genero">
+                        <select class="form-select" id="genero" th:field="*{genero}">
                             <option value="" selected>Selecione</option>
                             <option value="M">Masculino</option>
                             <option value="F">Feminino</option>
@@ -84,7 +92,7 @@
                     <div class="col-md-4">
                         <label for="dataNascimento" class="form-label">Data de nascimento</label>
                         <input type="date" class="form-control" id="dataNascimento"
-                               name="dataNascimento">
+                               th:field="*{dataNascimento}">
                     </div>
 
                     <!-- Altura em cm -->
@@ -93,7 +101,7 @@
                         <input type="number"
                                class="form-control"
                                id="alturaCm"
-                               name="alturaCm"
+                               th:field="*{alturaCm}"
                                min="100" max="250"
                                placeholder="Ex: 188">
                         <div class="form-text">
@@ -107,7 +115,7 @@
                         <input type="number"
                                class="form-control"
                                id="pesoKg"
-                               name="pesoKg"
+                               th:field="*{pesoKg}"
                                step="0.1"
                                min="30" max="300"
                                placeholder="Ex: 80.5">

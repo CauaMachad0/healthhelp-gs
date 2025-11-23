@@ -4,11 +4,14 @@ import br.com.global.healthhelp.dto.AtividadeDTO;
 import br.com.global.healthhelp.dto.RegistroDiarioDTO;
 import br.com.global.healthhelp.model.Usuario;
 import br.com.global.healthhelp.repository.CategoriaAtividadeRepository;
+import br.com.global.healthhelp.repository.UsuarioRepository;
 import br.com.global.healthhelp.service.RegistroDiarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +27,21 @@ public class RegistroDiarioWebController {
 
     private final RegistroDiarioService registroService;
     private final CategoriaAtividadeRepository categoriaRepo;
+    private final UsuarioRepository usuarioRepository;
 
     public RegistroDiarioWebController(RegistroDiarioService registroService,
-                                       CategoriaAtividadeRepository categoriaRepo) {
+                                       CategoriaAtividadeRepository categoriaRepo,
+                                       UsuarioRepository usuarioRepository) {
         this.registroService = registroService;
         this.categoriaRepo = categoriaRepo;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    private Usuario getUsuarioFake() {
-        Usuario u = new Usuario();
-        u.setId(1L);
-        return u;
+    private Usuario getUsuarioAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário autenticado não encontrado"));
     }
 
     @GetMapping
@@ -43,7 +50,7 @@ public class RegistroDiarioWebController {
             Pageable pageable,
             Model model
     ) {
-        Usuario usuario = getUsuarioFake();
+        Usuario usuario = getUsuarioAutenticado();
 
         Page<RegistroDiarioDTO> pagina =
                 registroService.listarPorUsuario(usuario, pageable);
@@ -92,7 +99,7 @@ public class RegistroDiarioWebController {
                 List.of(atividade)
         );
 
-        Usuario usuario = getUsuarioFake();
+        Usuario usuario = getUsuarioAutenticado();
         registroService.salvarRegistro(usuario, dto);
 
         return "redirect:/web/registros";

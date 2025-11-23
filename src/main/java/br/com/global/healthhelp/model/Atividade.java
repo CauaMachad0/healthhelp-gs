@@ -23,7 +23,6 @@ public class Atividade {
     @Column(name = "DESCRICAO", length = 200)
     private String descricao;
 
-    // ATENÇÃO: nomes das colunas iguais aos do banco
     @Column(name = "INICIO_TS")
     private LocalDateTime inicio;
 

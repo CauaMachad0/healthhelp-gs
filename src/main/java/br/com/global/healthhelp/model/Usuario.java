@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // coluna identity do Oracle
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USUARIO_ID")
     private Long id;
 

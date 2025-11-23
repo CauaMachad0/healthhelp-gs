@@ -38,8 +38,8 @@
                               th:text="${#temporals.format(recomendacao.criadaEm, 'dd/MM/yyyy HH:mm')}"></span>
                     </div>
                     <h2 class="h5 mb-3">Plano de ação sugerido</h2>
-                    <pre class="mb-0 text-light" style="white-space: pre-wrap;"
-                         th:text="${recomendacao.mensagem}"></pre>
+                    <div class="mb-0 text-light" style="white-space: pre-wrap;"
+                         th:utext="${renderedHtml}"></div>
                 </div>
 
                 <div class="mt-3 text-secondary small">

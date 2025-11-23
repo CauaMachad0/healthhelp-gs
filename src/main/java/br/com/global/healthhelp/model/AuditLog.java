@@ -16,7 +16,7 @@ public class AuditLog {
     private String tabela;
 
     @Column(name = "OPERACAO", nullable = false, length = 10)
-    private String operacao; // INSERT, UPDATE, DELETE
+    private String operacao;
 
     @Column(name = "REGISTRO_ID")
     private Long registroId;
